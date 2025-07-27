@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GitBranch, GitCommit, Plus, Minus, RefreshCw, Check, X, ChevronDown, ChevronRight, Info, History, FileText, Mic, MicOff, Sparkles, Download, RotateCcw, Trash2, AlertTriangle, Upload } from 'lucide-react';
 import { MicButton } from './MicButton.jsx';
-import { authenticatedFetch } from '../utils/api';
+import { apiFetch } from '../utils/api';
 
 function GitPanel({ selectedProject, isMobile }) {
   const [gitStatus, setGitStatus] = useState(null);
@@ -64,7 +64,7 @@ function GitPanel({ selectedProject, isMobile }) {
     
     setIsLoading(true);
     try {
-      const response = await authenticatedFetch(`/api/git/status?project=${encodeURIComponent(selectedProject.name)}`);
+      const response = await apiFetch(`/api/git/status?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
       
       console.log('Git status response:', data);
@@ -102,7 +102,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const fetchBranches = async () => {
     try {
-      const response = await authenticatedFetch(`/api/git/branches?project=${encodeURIComponent(selectedProject.name)}`);
+      const response = await apiFetch(`/api/git/branches?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
       
       if (!data.error && data.branches) {
@@ -117,7 +117,7 @@ function GitPanel({ selectedProject, isMobile }) {
     if (!selectedProject) return;
     
     try {
-      const response = await authenticatedFetch(`/api/git/remote-status?project=${encodeURIComponent(selectedProject.name)}`);
+      const response = await apiFetch(`/api/git/remote-status?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
       
       if (!data.error) {
@@ -133,7 +133,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const switchBranch = async (branchName) => {
     try {
-      const response = await authenticatedFetch('/api/git/checkout', {
+      const response = await apiFetch('/api/git/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -160,7 +160,7 @@ function GitPanel({ selectedProject, isMobile }) {
     
     setIsCreatingBranch(true);
     try {
-      const response = await authenticatedFetch('/api/git/create-branch', {
+      const response = await apiFetch('/api/git/create-branch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +190,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const handleFetch = async () => {
     setIsFetching(true);
     try {
-      const response = await authenticatedFetch('/api/git/fetch', {
+      const response = await apiFetch('/api/git/fetch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -216,7 +216,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const handlePull = async () => {
     setIsPulling(true);
     try {
-      const response = await authenticatedFetch('/api/git/pull', {
+      const response = await apiFetch('/api/git/pull', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -243,7 +243,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const handlePush = async () => {
     setIsPushing(true);
     try {
-      const response = await authenticatedFetch('/api/git/push', {
+      const response = await apiFetch('/api/git/push', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -270,7 +270,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const handlePublish = async () => {
     setIsPublishing(true);
     try {
-      const response = await authenticatedFetch('/api/git/publish', {
+      const response = await apiFetch('/api/git/publish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -297,7 +297,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const discardChanges = async (filePath) => {
     try {
-      const response = await authenticatedFetch('/api/git/discard', {
+      const response = await apiFetch('/api/git/discard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -325,7 +325,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const deleteUntrackedFile = async (filePath) => {
     try {
-      const response = await authenticatedFetch('/api/git/delete-untracked', {
+      const response = await apiFetch('/api/git/delete-untracked', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -385,7 +385,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const fetchFileDiff = async (filePath) => {
     try {
-      const response = await authenticatedFetch(`/api/git/diff?project=${encodeURIComponent(selectedProject.name)}&file=${encodeURIComponent(filePath)}`);
+              const response = await apiFetch(`/api/git/diff?project=${encodeURIComponent(selectedProject.name)}&file=${encodeURIComponent(filePath)}`);
       const data = await response.json();
       
       if (!data.error && data.diff) {
@@ -401,7 +401,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const fetchRecentCommits = async () => {
     try {
-      const response = await authenticatedFetch(`/api/git/commits?project=${encodeURIComponent(selectedProject.name)}&limit=10`);
+      const response = await apiFetch(`/api/git/commits?project=${encodeURIComponent(selectedProject.name)}&limit=10`);
       const data = await response.json();
       
       if (!data.error && data.commits) {
@@ -414,7 +414,7 @@ function GitPanel({ selectedProject, isMobile }) {
 
   const fetchCommitDiff = async (commitHash) => {
     try {
-      const response = await authenticatedFetch(`/api/git/commit-diff?project=${encodeURIComponent(selectedProject.name)}&commit=${commitHash}`);
+      const response = await apiFetch(`/api/git/commit-diff?project=${encodeURIComponent(selectedProject.name)}&commit=${commitHash}`);
       const data = await response.json();
       
       if (!data.error && data.diff) {
@@ -431,7 +431,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const generateCommitMessage = async () => {
     setIsGeneratingMessage(true);
     try {
-      const response = await authenticatedFetch('/api/git/generate-commit-message', {
+      const response = await apiFetch('/api/git/generate-commit-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -498,7 +498,7 @@ function GitPanel({ selectedProject, isMobile }) {
     
     setIsCommitting(true);
     try {
-      const response = await authenticatedFetch('/api/git/commit', {
+              const response = await apiFetch('/api/git/commit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

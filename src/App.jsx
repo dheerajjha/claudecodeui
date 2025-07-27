@@ -28,8 +28,6 @@ import QuickSettingsPanel from './components/QuickSettingsPanel';
 
 import { useWebSocket } from './utils/websocket';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
 import { useVersionCheck } from './hooks/useVersionCheck';
 import { api } from './utils/api';
 
@@ -647,16 +645,12 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <ProtectedRoute>
           <Router>
             <Routes>
               <Route path="/" element={<AppContent />} />
               <Route path="/session/:sessionId" element={<AppContent />} />
             </Routes>
           </Router>
-        </ProtectedRoute>
-      </AuthProvider>
     </ThemeProvider>
   );
 }
