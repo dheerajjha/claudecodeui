@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Folder, Terminal, GitBranch, Globe } from 'lucide-react';
+import { MessageSquare, Folder, Terminal, Monitor, GitBranch, Globe } from 'lucide-react';
 
 function MobileNav({ activeTab, setActiveTab, isInputFocused }) {
   // Detect dark mode
@@ -14,6 +14,11 @@ function MobileNav({ activeTab, setActiveTab, isInputFocused }) {
       id: 'shell',
       icon: Terminal,
       onClick: () => setActiveTab('shell')
+    },
+    {
+      id: 'terminal',
+      icon: Monitor,
+      onClick: () => setActiveTab('terminal')
     },
     {
       id: 'files',

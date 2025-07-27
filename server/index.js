@@ -408,6 +408,8 @@ wss.on('connection', (ws, request) => {
   
   if (pathname === '/shell') {
     handleShellConnection(ws);
+  } else if (pathname === '/terminal') {
+    handleTerminalConnection(ws);
   } else if (pathname === '/ws') {
     handleChatConnection(ws);
   } else {
@@ -625,6 +627,126 @@ function handleShellConnection(ws) {
     console.error('❌ Shell WebSocket error:', error);
   });
 }
+
+// Handle plain terminal WebSocket connections (no Claude CLI auto-execution)
+function handleTerminalConnection(ws) {
+  console.log('🖥️ Terminal client connected');
+  let terminalProcess = null;
+  
+  ws.on('message', async (message) => {
+    try {
+      const data = JSON.parse(message);
+      console.log('📨 Terminal message received:', data.type);
+      
+      if (data.type === 'init') {
+        // Initialize plain terminal with project path
+        const projectPath = data.projectPath || process.cwd();
+        
+        console.log('🚀 Starting plain terminal in:', projectPath);
+        
+        // Send a welcome message
+        const welcomeMsg = `\x1b[36mPlain terminal session in: ${projectPath}\x1b[0m\r\n`;
+        
+        ws.send(JSON.stringify({
+          type: 'output',
+          data: welcomeMsg
+        }));
+        
+        try {
+          // Start plain shell without any pre-commands
+          const shellCommand = `cd "${projectPath}"`;
+          
+          console.log('🔧 Executing shell command:', shellCommand);
+          
+          // Start shell using PTY for proper terminal emulation
+          terminalProcess = pty.spawn('bash', ['-c', shellCommand + ' && bash'], {
+            name: 'xterm-256color',
+            cols: 80,
+            rows: 24,
+            cwd: projectPath, // Start directly in project directory
+            env: { 
+              ...process.env,
+              TERM: 'xterm-256color',
+              COLORTERM: 'truecolor',
+              FORCE_COLOR: '3'
+            }
+          });
+          
+          console.log('🟢 Terminal process started with PTY, PID:', terminalProcess.pid);
+          
+          // Handle data output
+          terminalProcess.onData((data) => {
+            if (ws.readyState === ws.OPEN) {
+              // Send regular output
+              ws.send(JSON.stringify({
+                type: 'output',
+                data: data
+              }));
+            }
+          });
+          
+          // Handle process exit
+          terminalProcess.onExit((exitCode) => {
+            console.log('🔚 Terminal process exited with code:', exitCode.exitCode, 'signal:', exitCode.signal);
+            if (ws.readyState === ws.OPEN) {
+              ws.send(JSON.stringify({
+                type: 'output',
+                data: `\r\n\x1b[33mProcess exited with code ${exitCode.exitCode}${exitCode.signal ? ` (${exitCode.signal})` : ''}\x1b[0m\r\n`
+              }));
+            }
+            terminalProcess = null;
+          });
+          
+        } catch (spawnError) {
+          console.error('❌ Error spawning terminal process:', spawnError);
+          ws.send(JSON.stringify({
+            type: 'output',
+            data: `\r\n\x1b[31mError: ${spawnError.message}\x1b[0m\r\n`
+          }));
+        }
+        
+      } else if (data.type === 'input') {
+        // Send input to terminal process
+        if (terminalProcess && terminalProcess.write) {
+          try {
+            terminalProcess.write(data.data);
+          } catch (error) {
+            console.error('Error writing to terminal:', error);
+          }
+        } else {
+          console.warn('No active terminal process to send input to');
+        }
+      } else if (data.type === 'resize') {
+        // Handle terminal resize
+        if (terminalProcess && terminalProcess.resize) {
+          console.log('Terminal resize requested:', data.cols, 'x', data.rows);
+          terminalProcess.resize(data.cols, data.rows);
+        }
+      }
+    } catch (error) {
+      console.error('❌ Terminal WebSocket error:', error.message);
+      if (ws.readyState === ws.OPEN) {
+        ws.send(JSON.stringify({
+          type: 'output',
+          data: `\r\n\x1b[31mError: ${error.message}\x1b[0m\r\n`
+        }));
+      }
+    }
+  });
+  
+  ws.on('close', () => {
+    console.log('🔌 Terminal client disconnected');
+    if (terminalProcess && terminalProcess.kill) {
+      console.log('🔴 Killing terminal process:', terminalProcess.pid);
+      terminalProcess.kill();
+    }
+  });
+  
+  ws.on('error', (error) => {
+    console.error('❌ Terminal WebSocket error:', error);
+  });
+}
+
 // Audio transcription endpoint
 app.post('/api/transcribe', async (req, res) => {
   try {

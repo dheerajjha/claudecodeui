@@ -39,6 +39,7 @@ A desktop and mobile UI for [Claude Code](https://docs.anthropic.com/en/docs/cla
 - **File Explorer** - Interactive file tree with syntax highlighting and live editing
 - **Git Explorer** - View, stage and commit your changes. You can also switch branches 
 - **Session Management** - Resume conversations, manage multiple sessions, and track history
+- **Internet Access** - Share your development environment securely using Cloudflare Tunnel (free, unlimited, and reliable)
 
 
 ## Quick Start
@@ -160,11 +161,54 @@ The UI automatically discovers Claude Code projects from `~/.claude/projects/` a
 - **React 18** - Modern component architecture with hooks
 - **CodeMirror** - Advanced code editor with syntax highlighting
 
+## Internet Access
 
+Make your Claude Code UI accessible from anywhere using Cloudflare Tunnel - a free, secure, and reliable solution that has replaced ngrok in this project.
 
+### ⚡ Quick Start (Temporary Tunnel)
 
+For immediate internet access:
 
-### Contributing
+```bash
+# 1. Install cloudflared (one-time setup)
+brew install cloudflare/cloudflare/cloudflared
+
+# 2. Start your tunnel
+./start-internet.sh
+```
+
+This creates a temporary tunnel with a random URL like `https://random-name.trycloudflare.com` that you can use immediately.
+
+### 🌐 Custom Domain Setup (Optional)
+
+For a permanent setup with your own domain:
+
+```bash
+# Run the interactive setup helper
+./setup-cloudflare.sh
+```
+
+This will guide you through:
+- Cloudflare authentication
+- Tunnel creation
+- DNS configuration
+- Custom domain setup
+
+### 📚 Learn More
+
+- **Full Documentation**: [INTERNET_SETUP.md](INTERNET_SETUP.md)
+- **Migration Guide**: Why we switched from ngrok to Cloudflare
+- **Advanced Configuration**: Custom domains, SSL, security features
+
+### ✨ Benefits of Cloudflare Tunnel
+
+- **🆓 Free & Unlimited**: No bandwidth limits or session restrictions
+- **⚡ Fast**: Global network for optimal performance  
+- **🔒 Secure**: Built-in DDoS protection and firewall
+- **🌍 Reliable**: No random disconnections or downtime
+- **🎯 Custom Domains**: Use your own domain with proper SSL
+
+## Contributing
 
 We welcome contributions! Please follow these guidelines:
 
