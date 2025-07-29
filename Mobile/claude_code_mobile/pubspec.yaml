@@ -149,7 +149,7 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
-# see https://flutter.dev/to/font-from-package
+  # see https://flutter.dev/to/font-from-package
 
 dependency_overrides:
   # Override record_linux to use a newer version that fixes the iOS build issue

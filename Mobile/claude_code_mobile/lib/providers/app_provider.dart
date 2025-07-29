@@ -13,6 +13,7 @@ class AppProvider extends ChangeNotifier {
   Project? _selectedProject;
   Session? _selectedSession;
   List<ChatMessage> _chatMessages = [];
+  List<Map<String, dynamic>> _shellMessages = [];
   bool _isLoading = false;
   bool _isChatConnected = false;
   bool _isShellConnected = false;
@@ -29,6 +30,7 @@ class AppProvider extends ChangeNotifier {
   Project? get selectedProject => _selectedProject;
   Session? get selectedSession => _selectedSession;
   List<ChatMessage> get chatMessages => _chatMessages;
+  List<Map<String, dynamic>> get shellMessages => _shellMessages;
   bool get isLoading => _isLoading;
   bool get isChatConnected => _isChatConnected;
   bool get isShellConnected => _isShellConnected;
@@ -53,6 +55,11 @@ class AppProvider extends ChangeNotifier {
     // Listen to chat messages
     _apiClient.chatMessages.listen((message) {
       _handleWebSocketMessage(message);
+    });
+
+    // Listen to shell output
+    _apiClient.shellOutput.listen((message) {
+      _handleShellOutput(message);
     });
   }
 
@@ -154,6 +161,15 @@ class AppProvider extends ChangeNotifier {
     // Handle session abortion if needed
     _clearError();
     notifyListeners();
+  }
+
+  void _handleShellOutput(Map<String, dynamic> message) {
+    try {
+      _shellMessages.add(message);
+      notifyListeners();
+    } catch (e) {
+      _handleError('Error processing shell output: $e');
+    }
   }
 
   void _addChatMessage(ChatMessage message) {

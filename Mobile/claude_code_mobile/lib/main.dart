@@ -30,16 +30,6 @@ class ClaudeCodeMobileApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode: ThemeMode.system,
             home: const HomeScreen(),
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(
-                    1.0,
-                  ), // Prevent system font scaling
-                ),
-                child: child!,
-              );
-            },
           );
         },
       ),

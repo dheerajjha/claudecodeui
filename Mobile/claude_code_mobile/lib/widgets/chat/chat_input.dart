@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import '../../providers/app_provider.dart';
-import '../../services/api_service.dart';
 
 class ChatInput extends StatefulWidget {
   const ChatInput({super.key});

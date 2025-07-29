@@ -157,21 +157,21 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
             // File browser
             Expanded(
               child: Row(
-                children: [
+            children: [
                   // File tree (left panel)
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
                           right: BorderSide(
                             color: Theme.of(context).dividerColor,
                           ),
-                        ),
-                      ),
-                      child: _buildFileTree(),
                     ),
                   ),
+                      child: _buildFileTree(),
+                ),
+              ),
 
                   // File content (right panel)
                   Expanded(flex: 2, child: _buildFileContent()),
@@ -187,9 +187,9 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
   Widget _buildFileTree() {
     if (_isLoadingFiles) {
       return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
             Text('Loading files...'),
@@ -204,7 +204,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.folder_open, size: 48, color: Colors.grey),
-            SizedBox(height: 16),
+                            SizedBox(height: 16),
             Text('No files found'),
           ],
         ),
@@ -224,7 +224,7 @@ class _FileExplorerScreenState extends State<FileExplorerScreen> {
             color: file.type == 'directory'
                 ? Colors.blue
                 : Theme.of(context).iconTheme.color,
-          ),
+                        ),
           title: Text(
             file.name,
             style: TextStyle(

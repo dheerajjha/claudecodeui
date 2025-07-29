@@ -173,7 +173,34 @@ class _HomeScreenState extends State<HomeScreen> {
           // Show project selector if no project selected
           if (provider.selectedProject == null &&
               provider.projects.isNotEmpty) {
-            return const ProjectSelectorScreen();
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.folder_open,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Select a Project',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Choose a project to start working',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => _showProjectSelector(context),
+                    icon: const Icon(Icons.folder_open),
+                    label: const Text('Browse Projects'),
+                  ),
+                ],
+              ),
+            );
           }
 
           // Show empty state if no projects

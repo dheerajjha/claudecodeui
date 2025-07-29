@@ -14,6 +14,7 @@ class _ShellScreenState extends State<ShellScreen> {
   final ScrollController _scrollController = ScrollController();
   final List<ShellMessage> _messages = [];
   bool _isConnected = false;
+  int _lastShellMessageCount = 0;
 
   @override
   void initState() {
@@ -102,10 +103,68 @@ class _ShellScreenState extends State<ShellScreen> {
     });
   }
 
+  String _cleanAnsiCodes(String text) {
+    // Remove ANSI escape sequences (colors, cursor movements, etc.)
+    return text
+        .replaceAll(RegExp(r'\x1B\[[0-9;]*[mGKHfJ]'), '') // Most common ANSI codes
+        .replaceAll(RegExp(r'\x1B\[[0-9;]*[A-Za-z]'), '') // Other ANSI codes
+        .replaceAll(RegExp(r'\x1B\]0;.*?\x07'), '') // Terminal title sequences
+        .replaceAll(RegExp(r'\r\n|\r|\n'), '\n') // Normalize line endings
+        .trim();
+  }
+
+  void _checkForNewShellMessages(AppProvider provider) {
+    if (provider.shellMessages.length > _lastShellMessageCount) {
+      // Add new shell messages
+      for (int i = _lastShellMessageCount; i < provider.shellMessages.length; i++) {
+        final shellMsg = provider.shellMessages[i];
+        final rawContent = shellMsg['data']?.toString() ?? shellMsg.toString();
+        final cleanContent = _cleanAnsiCodes(rawContent);
+        
+        if (cleanContent.trim().isNotEmpty) {
+          // Check if this should be appended to the last message or create a new one
+          if (_messages.isNotEmpty && 
+              _messages.last.type == 'output' && 
+              DateTime.now().difference(_messages.last.timestamp).inMilliseconds < 500) {
+            // Append to last message if it's recent output
+            final lastMessage = _messages.removeLast();
+            _messages.add(ShellMessage(
+              type: 'output',
+              content: '${lastMessage.content}$cleanContent',
+              timestamp: lastMessage.timestamp,
+            ));
+          } else {
+            // Create new message
+            _messages.add(ShellMessage(
+              type: 'output',
+              content: cleanContent,
+              timestamp: DateTime.now(),
+            ));
+          }
+        }
+      }
+      _lastShellMessageCount = provider.shellMessages.length;
+      
+      // Auto-scroll to bottom
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppProvider>(
       builder: (context, provider, child) {
+        // Check for new shell messages from the provider
+        _checkForNewShellMessages(provider);
+        
         if (provider.selectedProject == null) {
           return const Center(
             child: Column(
