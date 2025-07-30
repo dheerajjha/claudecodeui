@@ -63,7 +63,7 @@ dependencies:
   highlight: ^0.7.0
   
   # Terminal/Shell
-  xterm: ^3.5.0
+  xterm: ^4.0.0
   
   # Git Diff & Text Processing
   diff_match_patch: ^0.4.1
