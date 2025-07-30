@@ -7,6 +7,7 @@ import '../session/chat_screen.dart';
 import '../session/file_explorer_screen.dart';
 import '../session/git_screen.dart';
 import '../session/shell_screen.dart';
+import '../session/terminal_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,6 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedIcon: Icons.terminal,
       label: 'Shell',
     ),
+    NavigationItem(
+      icon: Icons.computer_outlined,
+      selectedIcon: Icons.computer,
+      label: 'Terminal',
+    ),
   ];
 
   @override
@@ -60,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return const GitScreen();
       case 3:
         return const ShellScreen();
+      case 4:
+        return const TerminalScreen();
       default:
         return const ChatScreen();
     }

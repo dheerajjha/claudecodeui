@@ -50,10 +50,31 @@ class _ChatScreenState extends State<ChatScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 color: Colors.orange,
-                child: const Text(
-                  'Connecting to chat server...',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Connecting to chat server...',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () => provider.connectChat(),
+                      child: const Text(
+                        'Retry',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
