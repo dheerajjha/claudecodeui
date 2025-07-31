@@ -18,7 +18,7 @@ class AppProvider extends ChangeNotifier {
   bool _isChatConnected = false;
   bool _isShellConnected = false;
   String? _error;
-  String _serverUrl = 'http://localhost:3008';
+  String _serverUrl = 'https://claude.grabr.cc';
 
   // Constructor
   AppProvider() {

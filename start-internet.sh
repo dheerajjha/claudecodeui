@@ -16,7 +16,7 @@ SERVER_PID=$!
 echo "⏳ Waiting for server to start..."
 sleep 5
 
-SERVER_PORT=$(grep -o "running on.*:[0-9]*" /tmp/claude-server.log | grep -o "[0-9]*" | tail -1)
+SERVER_PORT=$(grep -o "running on.*:[0-9]*" /tmp/claude-server.lRog | grep -o "[0-9]*" | tail -1)
 if [ -z "$SERVER_PORT" ]; then
   echo "⚠️  Could not detect server port from logs, checking environment..."
   SERVER_PORT=${PORT:-3008}

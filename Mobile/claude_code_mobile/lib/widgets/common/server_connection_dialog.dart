@@ -43,7 +43,7 @@ class _ServerConnectionDialogState extends State<ServerConnectionDialog> {
             controller: _urlController,
             decoration: const InputDecoration(
               labelText: 'Server URL',
-              hintText: 'http://localhost:3008',
+              hintText: 'https://claude.grabr.cc',
               prefixIcon: Icon(Icons.link),
             ),
             keyboardType: TextInputType.url,

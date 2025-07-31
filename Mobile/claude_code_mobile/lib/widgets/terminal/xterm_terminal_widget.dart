@@ -101,7 +101,7 @@ class _XTermTerminalWidgetState extends State<XTermTerminalWidget> {
       final endpoint = widget.isShellMode ? 'shell' : 'terminal';
 
       // Connect to WebSocket - same backend as web version
-      final uri = Uri.parse('ws://localhost:3008/$endpoint');
+      final uri = Uri.parse('wss://claude.grabr.cc/$endpoint');
       _webSocketChannel = WebSocketChannel.connect(uri);
 
       // Send initialization message - same format as web version

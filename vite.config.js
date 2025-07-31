@@ -11,9 +11,9 @@ export default defineConfig(({ command, mode }) => {
     server: {
       port: parseInt(env.VITE_PORT) || 3001,
       proxy: {
-        '/api': `http://localhost:${env.PORT || 3002}`,
+        '/api': 'https://claude.grabr.cc',
         '/ws': {
-          target: `ws://localhost:${env.PORT || 3002}`,
+          target: 'wss://claude.grabr.cc',
           ws: true
         }
       }

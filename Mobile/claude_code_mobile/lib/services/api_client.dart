@@ -13,7 +13,7 @@ import '../models/file_item.dart';
 /// for the Claude Code Mobile app. This consolidates all backend communication
 /// into a single, easy-to-use service.
 class ApiClient {
-  static const String _defaultBaseUrl = 'http://localhost:3008';
+  static const String _defaultBaseUrl = 'https://claude.grabr.cc';
 
   String _baseUrl;
   late http.Client _httpClient;
@@ -334,7 +334,9 @@ class ApiClient {
     }
 
     try {
-      final wsUrl = _baseUrl.replaceFirst('http', 'ws');
+      final wsUrl = _baseUrl
+          .replaceFirst('https', 'wss')
+          .replaceFirst('http', 'ws');
       _chatChannel = IOWebSocketChannel.connect('$wsUrl/ws');
       _chatConnectionController.add(true);
 
@@ -372,7 +374,9 @@ class ApiClient {
     }
 
     try {
-      final wsUrl = _baseUrl.replaceFirst('http', 'ws');
+      final wsUrl = _baseUrl
+          .replaceFirst('https', 'wss')
+          .replaceFirst('http', 'ws');
       _shellChannel = IOWebSocketChannel.connect('$wsUrl/shell');
       _shellConnectionController.add(true);
 
