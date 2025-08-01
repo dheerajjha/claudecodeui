@@ -987,7 +987,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
   } else {
     // In development, redirect to Vite dev server
-    res.redirect('https://claude.grabr.cc');
+    res.redirect(`http://localhost:${process.env.VITE_PORT || 3001}`);
   }
 });
 
